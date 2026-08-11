@@ -1,0 +1,7 @@
+# أضف هذا في ملف target/linux/ath79/generic/base-files/etc/board.d/02_network
+# في المكان المناسب (بجانب cf-e375ac)
+
+comfast,cf-wa350)
+	ucidef_add_switch "switch0" \
+		"0@eth0" "1:wan" "2:lan"
+	;;

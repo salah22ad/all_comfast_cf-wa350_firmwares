@@ -1,0 +1,8 @@
+# أضف هذا في ملف target/linux/ath79/generic/base-files/etc/board.d/01_leds
+# في المكان المناسب (بجانب cf-e375ac أو في نهاية الملف قبل ucidef_commit_leds)
+
+comfast,cf-wa350)
+	ucidef_set_led_switch "wan" "WAN" "red:wan" "switch0" "0x02"
+	ucidef_set_led_switch "lan" "LAN" "green:lan" "switch0" "0x04"
+	ucidef_set_led_wlan "wlan2g" "WLAN2G" "blue:wlan2g" "phy0radio"
+	;;
