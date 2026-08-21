@@ -156,7 +156,7 @@
 	mac-address-increment = <10>;
 };
 
-&pcie0 {
+&pcie {
 	wifi@0,0 {
 		compatible = "qcom,ath10k";
 		reg = <0x0000 0 0 0 0>;
