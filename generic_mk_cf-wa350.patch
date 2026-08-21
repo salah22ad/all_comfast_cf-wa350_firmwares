@@ -1,12 +1,10 @@
-# أضف هذا في ملف target/linux/ath79/image/generic.mk
-# (بجانب cf-e375ac)
-
 define Device/comfast_cf-wa350
+  $(Device/uimage-lzma-loader)
   SOC := qca9563
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-WA350
-  DEVICE_PACKAGES := kmod-ath10k-ct \
-	ath10k-firmware-qca9888-ct -uboot-envtools
+  DEVICE_PACKAGES := kmod-ath10k-ct-smallbuffers \
+    ath10k-firmware-qca9888-ct
   IMAGE_SIZE := 16000k
   SUPPORTED_DEVICES += comfast,cf-wa350
 endef
