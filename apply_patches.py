@@ -71,7 +71,7 @@ def patch_generic_mk():
         return
     with open(fpath, "r") as f:
         content = f.read()
-    patch = '\ndefine Device/comfast_cf-wa350\n  SOC := qca9563\n  DEVICE_VENDOR := COMFAST\n  DEVICE_MODEL := CF-WA350\n  DEVICE_PACKAGES := kmod-ath10k-ct \\\n\tath10k-firmware-qca9888-ct -uboot-envtools\n  IMAGE_SIZE := 16000k\n  SUPPORTED_DEVICES += comfast,cf-wa350\nendef\nTARGET_DEVICES += comfast_cf-wa350\n'
+    patch = '\ndefine Device/comfast_cf-wa350\n  $(Device/uimage-lzma-loader)\n  SOC := qca9563\n  DEVICE_VENDOR := COMFAST\n  DEVICE_MODEL := CF-WA350\n  DEVICE_PACKAGES := kmod-ath10k-ct-smallbuffers \\\n    ath10k-firmware-qca9888-ct\n  IMAGE_SIZE := 16000k\n  SUPPORTED_DEVICES += comfast,cf-wa350\nendef\nTARGET_DEVICES += comfast_cf-wa350\n'
     if "comfast_cf-wa350" in content:
         print(">>> generic.mk already patched")
         return
