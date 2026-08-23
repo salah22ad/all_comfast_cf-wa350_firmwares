@@ -1,0 +1,8 @@
+# أضف هذا في قسم ath79_setup_macs في ملف 02_network
+# (بجانب cf-e375ac)
+
+	comfast,cf-wa350)
+		wan_mac=$(mtd_get_mac_binary art 0x0)
+		lan_mac=$(macaddr_add "$wan_mac" 1)
+		label_mac=$wan_mac
+		;;

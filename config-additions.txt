@@ -1,0 +1,24 @@
+# ============================================
+# إعدادات إضافية ضرورية لـ CF-WA350
+# أضف هذه الأسطر إلى نهاية ملف .config
+# ثم شغّل: make oldconfig
+# ============================================
+
+# خادم الويب LuCI (لحل مشكلة عدم فتح صفحة الإدارة)
+CONFIG_PACKAGE_uhttpd=y
+CONFIG_PACKAGE_uhttpd-mod-ubus=y
+
+# تطبيقات LuCI الأساسية
+CONFIG_PACKAGE_luci-app-firewall=y
+CONFIG_PACKAGE_luci-proto-ppp=y
+CONFIG_PACKAGE_luci-proto-ipv6=y
+
+# إذا كنت تريد إدارة الحزم عبر الويب
+CONFIG_PACKAGE_luci-app-package-manager=y
+
+# دعم ath10k-ct-smallbuffers (مضمن افتراضياً في target لكن نتأكد)
+CONFIG_PACKAGE_kmod-ath10k-ct-smallbuffers=y
+CONFIG_PACKAGE_ath10k-firmware-qca9888-ct=y
+
+# دعم ath9k (2.4GHz المدمج)
+CONFIG_PACKAGE_kmod-ath9k=y

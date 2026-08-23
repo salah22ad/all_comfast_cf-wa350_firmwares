@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://salah22ad:ghp_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@github.com/salah22ad/all_comfast_cf-wa350_firmwares.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main

@@ -1,0 +1,6 @@
+# في ملف target/linux/ath79/generic/base-files/etc/hotplug.d/firmware/11-ath10k-caldata
+# ابحث عن هذا السطر:
+#   comfast,cf-e375ac|\
+# واستبدله بـ:
+#   comfast,cf-wa350|\
+#   comfast,cf-e375ac|\

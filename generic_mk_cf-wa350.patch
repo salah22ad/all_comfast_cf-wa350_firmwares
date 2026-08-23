@@ -1,0 +1,10 @@
+define Device/comfast_cf-wa350
+  SOC := qca9563
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-WA350
+  DEVICE_PACKAGES := kmod-ath10k-ct-smallbuffers \
+    ath10k-firmware-qca9888-ct -uboot-envtools
+  IMAGE_SIZE := 16000k
+  SUPPORTED_DEVICES += comfast,cf-wa350
+endef
+TARGET_DEVICES += comfast_cf-wa350
