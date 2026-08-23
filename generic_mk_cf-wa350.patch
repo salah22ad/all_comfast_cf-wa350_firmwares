@@ -1,4 +1,5 @@
 define Device/comfast_cf-wa350
+$(Device/uimage-lzma-loader)
   SOC := qca9563
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-WA350
