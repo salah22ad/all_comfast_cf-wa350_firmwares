@@ -10,7 +10,7 @@ def patch_leds():
         return
     with open(fpath, "r") as f:
         content = f.read()
-    patch = '\ncomfast,cf-wa350)\n\tucidef_set_led_switch "wan" "WAN" "red:wan" "switch0" "0x02"\n\tucidef_set_led_switch "lan" "LAN" "green:lan" "switch0" "0x04"\n\tucidef_set_led_wlan "wlan2g" "WLAN2G" "blue:wlan2g" "phy1tpt"\n\t;;'
+    patch = '\ncomfast,cf-wa350)\n\tucidef_set_led_switch "wan" "WAN" "red:wan" "switch0" "0x02"\n\tucidef_set_led_switch "lan" "LAN" "green:lan" "switch0" "0x04"\n\tucidef_set_led_default "wlan2g" "WLAN2G" "blue:wlan2g" "phy1tpt"\n\t;;'
     if "comfast,cf-wa350)" in content:
         print(">>> 01_leds already patched")
         return
@@ -32,7 +32,8 @@ def patch_network():
         return
     with open(fpath, "r") as f:
         content = f.read()
-    patch = '\n\tcomfast,cf-wa350)\n\t\tucidef_add_switch "switch0" "0@eth0" "1:wan" "2:lan"\n\t\t;;'
+   # patch = '\n\tcomfast,cf-wa350)\n\\t\tucidef_add_switch "switch0" "0@eth0" "1:wan" "2:lan"\n\t\t;;'
+patch = '\n\tcomfast,cf-wa350)\n\t\tucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"\n\t\tucidef_add_switch "switch0" \\\n\t\t\t"0@eth0" "1:wan" "2:lan"\n\t\t;;'
     if "comfast,cf-wa350)" in content and "ucidef_add_switch" in content:
         print(">>> 02_network already patched")
         return
@@ -99,14 +100,18 @@ def patch_caldata():
         return
     with open(fpath, "r") as f:
         content = f.read()
-    if "comfast,cf-wa350)|\\" in content:
+        
+    # الكود الجديد المستقل لجهاز cf-wa350
+    patch = '\tcomfast,cf-wa350)\n\t\tcaldata_extract "art" 0x5000 0x440\n\t\tath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0x0) 0x04)\n\t\t;; \n'
+    
+    if "comfast,cf-wa350)" in content:
         print(">>> 11-ath10k-caldata already patched")
         return
     
-    # البقاء على نفس مبدئك هنا لأنه الأصح لملف caldata، لكن بصيغة آمنة
+    # البحث عن الجهاز المشابه والحقن قبله بشكل آمن
     target = 'comfast,cf-e375ac)|\\'
     if target in content:
-        content = content.replace(target, 'comfast,cf-wa350)|\\\n\t' + target)
+        content = content.replace(target, patch + '\t' + target)
         with open(fpath, "w") as f:
             f.write(content)
         print(">>> 11-ath10k-caldata patched")
