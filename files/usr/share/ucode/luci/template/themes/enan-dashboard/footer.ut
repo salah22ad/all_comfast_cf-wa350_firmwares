@@ -1,0 +1,25 @@
+		</main>
+	</div>
+
+	<!-- ==================== FOOTER ==================== -->
+	<footer class="enan-footer">
+		<div class="enan-footer-left">
+			<a class="enan-footer-signature" href="https://www.facebook.com/eng.salah.alhaddad" target="_blank" rel="noopener noreferrer" aria-label="Haddad-inc on Facebook">
+				<span class="enan-footer-facebook" aria-hidden="true">f</span>
+				<span class="enan-footer-signature-copy">
+					<span class="enan-footer-brand">Professional Networking Solutions</span>
+					<span class="enan-footer-sep">|</span>
+					<span class="enan-footer-meta">By Haddad-inc / 780405427</span>
+				</span>
+			</a>
+		</div>
+		<div class="enan-footer-meta" id="enan-device-info">
+			{{ (boardinfo?.model) ?? 'CF-WA350' }} • {{ (boardinfo?.system) ?? 'QCA9563' }} • {{ (boardinfo?.memory) ?? '128MB' }} RAM • {{ (boardinfo?.release?.description) ?? 'OpenWrt 24.10.8' }}
+		</div>
+	</footer>
+
+	<!-- Theme Toggle (Bottom Right) -->
+	<button id="enan-theme-btn" class="enan-theme-toggle" type="button" aria-label="Toggle Theme">🌙</button>
+
+</body>
+</html>

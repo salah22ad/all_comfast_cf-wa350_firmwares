@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{{ (env?.HTTP_ACCEPT_LANGUAGE ? substr(env.HTTP_ACCEPT_LANGUAGE, 0, 2) : 'en') }}">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ striptags(((boardinfo?.hostname) ?? 'A-HADDAD') + ((category ?? '') ? ' - ' + category : '') + ((title ?? '') ? ' - ' + title : '')) }} | A-HADDAD Dashboard</title>
+	<meta name="theme-color" content="#0a0e1a">
+	<meta name="robots" content="noindex, nofollow">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<link rel="icon" type="image/svg+xml" href="{{ media }}/enan-logo.svg">
+	<link rel="stylesheet" href="{{ media }}/enan-dashboard.css?v={{ pkg_version }}">
+
+	<!-- Apply the persisted theme before the first paint. -->
+	<script>
+	(function() {
+		const saved = localStorage.getItem('enan-theme');
+		const theme = saved === 'light' ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', theme);
+		document.documentElement.setAttribute('data-enan-theme', theme);
+	})();
+	</script>
+
+	<!-- LuCI core modules are loaded by the dispatcher/runtime like Bootstrap and Material.
+	     Loading luci.js/rpc.js/ui.js again here can repeat the getFeatures probe. -->
+	<script src="{{ resource }}/cbi.js?v={{ pkg_version }}"></script>
+	<script src="{{ media }}/enan-dashboard.js?v={{ pkg_version }}"></script>
+	<script src="{{ media }}/enan-navigation.js?v={{ pkg_version }}"></script>
+	<script src="{{ media }}/dashboard-widgets.js?v={{ pkg_version }}"></script>
+</head>
+
+<body class="lang_{{ env?.LANG ?? 'en' }} {{ (node ?? '') ? 'node-' + replace(node, '/', '-') : '' }}" data-theme="dark"
+	data-page="{{ node ?? '' }}"
+	data-path="{{ join('/', ctx?.request_path ?? ctx?.path ?? []) }}"
+	data-media="{{ media }}"
+	data-resource="{{ resource }}">
+
+	<header class="enan-topbar">
+		<div class="enan-topbar-brand">
+			<div class="enan-logo">◉</div>
+			<span class="enan-brand-name">A-HADDAD</span>
+			<span class="enan-hostname" id="enan-hostname">{{ (boardinfo?.hostname) ?? 'A-HADDAD' }}</span>
+		</div>
+
+		<nav class="enan-topnav" id="enan-topnav" aria-label="Primary navigation">
+			<span class="enan-nav-loading">{{ _('Loading navigation...') }}</span>
+		</nav>
+
+			<div class="enan-topbar-right">
+				<div id="indicators" class="enan-header-indicators" aria-live="polite"></div>
+				<button class="enan-user-btn" id="enan-user-btn" type="button" aria-label="Logout">
+				<span>root</span>
+				<div class="enan-user-avatar">R</div>
+			</button>
+		</div>
+	</header>
+
+	<div class="enan-layout">
+		<aside class="enan-sidebar" id="enan-sidebar">
+			<nav class="enan-sidebar-nav" id="enan-sidebar-nav" aria-label="Sidebar navigation">
+				<div class="enan-nav-loading">{{ _('Loading navigation...') }}</div>
+			</nav>
+		</aside>
+
+		<main class="enan-main" id="maincontent">
+			<div id="flash" class="enan-flash-container"></div>
+			<div id="tabmenu" class="enan-tabmenu" style="display:none" aria-label="Page tabs"></div>

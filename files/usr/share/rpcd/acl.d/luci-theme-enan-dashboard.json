@@ -1,0 +1,29 @@
+{
+  "luci-theme-enan-dashboard": {
+    "description": "A-HADDAD Dashboard theme permissions",
+    "read": {
+      "file": {
+        "/proc/cpuinfo": [ "read" ],
+        "/sys/devices/system/cpu/*/cpufreq/*": [ "read" ],
+        "/sys/devices/system/cpu/cpufreq/*": [ "read" ],
+        "/sys/class/thermal/*/temp": [ "read" ],
+        "/sys/class/thermal/*/type": [ "read" ],
+        "/sys/class/hwmon/*/temp*_input": [ "read" ],
+        "/sys/class/hwmon/*/name": [ "read" ],
+        "/sys/class/net/*": [ "read" ]
+      },
+      "ubus": {
+        "system": [ "info", "board" ],
+        "luci-rpc": [ "getNetworkDevices", "getWirelessDevices", "getHostHints" ],
+        "luci": [ "getBuiltinEthernetPorts", "getFeatures", "getSwconfigPortState", "getSwconfigFeatures" ],
+        "network.interface": [ "dump" ],
+        "network.device": [ "status" ],
+        "iwinfo": [ "assoclist" ]
+      },
+      "uci": [ "luci", "system", "network" ]
+    },
+    "write": {
+      "uci": [ "luci" ]
+    }
+  }
+}

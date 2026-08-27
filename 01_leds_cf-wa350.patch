@@ -4,5 +4,5 @@
 comfast,cf-wa350)
 	ucidef_set_led_switch "wan" "WAN" "red:wan" "switch0" "0x02"
 	ucidef_set_led_switch "lan" "LAN" "green:lan" "switch0" "0x04"
-	ucidef_set_led_wlan "wlan2g" "WLAN2G" "blue:wlan2g" "phy1radio"
+	ucidef_set_led_wlan "wlan2g" "WLAN2G" "blue:wlan2g" "phy1tpt"
 	;;

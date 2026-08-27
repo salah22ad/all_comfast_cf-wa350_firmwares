@@ -97,9 +97,43 @@ _apply_direct() {
 		for section in $(uci -q show network | grep '=device' | cut -d. -f2 | cut -d= -f1); do
 			uci -q delete network.$section
 		done
-		for iface in $(uci -q show wireless | sed -n 's/^wireless\.\(.*\)=wifi-iface$//p'); do
+		for iface in $(uci -q show wireless | sed -n 's/^wireless\.\(.*\)=wifi-iface$/\1/p'); do
 			uci -q delete wireless.$iface
 		done
+             uci -q commit wireless
+            uci -q commit network
+
+# ── إعادة تسمية أجهزة الراديو إلى أسماء ثابتة (5G / 2G) ──
+rename_radio() {
+    local old_name="$1"
+    local band=$(uci -q get wireless.$old_name.band 2>/dev/null)
+    [ -z "$band" ] && return
+
+    local new_name=""
+    case "$band" in
+      *5g*|*5G*|*5.0g*|*5.0G*|*5.8g*|*5.8G*) new_name="5G" ;;
+      *2g*|*2G*|*2.4g*|*2.4G*) new_name="2G" ;;
+        *) return ;;
+    esac
+
+    # إذا كان القسم الجديد موجوداً بالفعل (ولا يساوي القديم)، احذفه أولاً لتجنب التعارض
+    if [ "$(uci -q get wireless.$new_name 2>/dev/null)" ] && [ "$old_name" != "$new_name" ]; then
+        uci -q delete wireless.$new_name
+    fi
+
+    # أعد التسمية فقط إذا كان الاسمان مختلفين
+    if [ "$old_name" != "$new_name" ]; then
+        uci -q rename wireless.$old_name="$new_name"
+        logger -t wizard "Renamed radio $old_name ($band) to $new_name"
+    fi
+}
+
+# تنفيذ إعادة التسمية لكل من radio0 و radio1 (إن وجدا)
+for radio in radio0 radio1; do
+    if uci -q get wireless.$radio >/dev/null 2>&1; then
+        rename_radio "$radio"
+    fi
+done
 
 	#	uci -q set network.loopback='interface'
 	#	uci -q set network.loopback.device='lo'
@@ -122,12 +156,12 @@ _apply_direct() {
 		uci -q set network.lan.delegate='0'
 	fi
 
-	uci -q set wireless.radio0.disabled='0'
-	uci -q set wireless.radio1.disabled='0'
-	uci -q set wireless.radio0.cell_density="$cell_density"
-	uci -q set wireless.radio1.cell_density="$cell_density"
-	uci -q set wireless.radio0.channel="$channel_5g"
-	uci -q set wireless.radio1.channel="$channel_2g"
+	uci -q set wireless.5G.disabled='0'
+	uci -q set wireless.2G.disabled='0'
+	uci -q set wireless.5G.cell_density="$cell_density"
+	uci -q set wireless.2G.cell_density="$cell_density"
+	uci -q set wireless.5G.channel="$channel_5g"
+	uci -q set wireless.2G.channel="$channel_2g"
 
 	local idx=0
 	local ap_network='lan'
@@ -135,7 +169,7 @@ _apply_direct() {
 
 	if [ "$is_mesh" = "1" ]; then
 		uci -q set wireless.wifinet${idx}='wifi-iface'
-		uci -q set wireless.wifinet${idx}.device='radio0'
+		uci -q set wireless.wifinet${idx}.device='5G'
 		uci -q set wireless.wifinet${idx}.mode='mesh'
 		uci -q set wireless.wifinet${idx}.mesh_id="$mesh_id"
 		uci -q set wireless.wifinet${idx}.mesh_fwding='1'
@@ -148,7 +182,7 @@ _apply_direct() {
 
 	if [ "$is_client" = "1" ]; then
 		uci -q set wireless.wifinet${idx}='wifi-iface'
-		uci -q set wireless.wifinet${idx}.device='radio0'
+		uci -q set wireless.wifinet${idx}.device='5G'
 		uci -q set wireless.wifinet${idx}.mode='sta'
 		uci -q set wireless.wifinet${idx}.ssid="$client_ssid"
 		uci -q set wireless.wifinet${idx}.wds='1'
@@ -160,7 +194,7 @@ _apply_direct() {
 	fi
 
 	uci -q set wireless.wifinet${idx}='wifi-iface'
-	uci -q set wireless.wifinet${idx}.device='radio1'
+	uci -q set wireless.wifinet${idx}.device='2G'
 	uci -q set wireless.wifinet${idx}.mode='ap'
 	uci -q set wireless.wifinet${idx}.ssid="$wifi_ssid"
 	uci -q set wireless.wifinet${idx}.wds='1'
@@ -176,7 +210,7 @@ _apply_direct() {
 	idx=$((idx + 1))
 
 	uci -q set wireless.wifinet${idx}='wifi-iface'
-	uci -q set wireless.wifinet${idx}.device='radio0'
+	uci -q set wireless.wifinet${idx}.device='5G'
 	uci -q set wireless.wifinet${idx}.mode='ap'
 	uci -q set wireless.wifinet${idx}.ssid="${wifi_ssid} 5G"
 	uci -q set wireless.wifinet${idx}.wds='1'
